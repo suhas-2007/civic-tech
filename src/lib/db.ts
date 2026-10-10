@@ -84,9 +84,9 @@ export async function getProjects(): Promise<{ projects: Project[]; source: 'sup
         return { projects: localProjectsState, source: 'fallback' };
       }
 
-      if (data && data.length > 0) {
+      if (!error && data) {
         return {
-          projects: data.map(mapRowToProject),
+          projects: data.length > 0 ? data.map(mapRowToProject) : localProjectsState,
           source: 'supabase',
         };
       }

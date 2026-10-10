@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getProjects, createProject } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // get all projects
 export async function GET() {
   try {

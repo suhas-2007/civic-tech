@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCitizenReports, createCitizenReport, upvoteCitizenReport } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // get all citizen reports
 export async function GET() {
   try {
