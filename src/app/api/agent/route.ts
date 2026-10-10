@@ -19,7 +19,14 @@ async function evaluateDeterministicResponse(prompt: string): Promise<string> {
 
   if (lower.includes('conflict') || lower.includes('clash') || lower.includes('overlap')) {
     if (conflicts.length === 0) return 'No physical or temporal coordination conflicts detected among current projects.';
-    const list = conflicts.map(c => `• **${c.project1Title}** (${c.department1}) vs **${c.project2Title}** (${c.department2})\n  - Reason: ${c.reason}\n  - Location: ${c.addressText}`).join('\n\n');
+    const list = conflicts.map(c => {
+      const p1 = projects.find(p => p.id === c.projectIds[0]);
+      const p2 = projects.find(p => p.id === c.projectIds[1]);
+      const title1 = p1?.title || c.projectIds[0] || 'Project 1';
+      const title2 = p2?.title || c.projectIds[1] || 'Project 2';
+      const loc = p1?.addressText || p2?.addressText || 'Shared Street';
+      return `• **${title1}** vs **${title2}**\n  - Reason: ${c.reason}\n  - Location: ${loc}`;
+    }).join('\n\n');
     return `### Active Coordination Clashes (${conflicts.length})\n${list}\n\n*Note: Detected deterministically based on physical proximity and overlapping excavation dates.*`;
   }
 
