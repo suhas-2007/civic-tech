@@ -24,7 +24,7 @@ Civorium acts as an autonomous public-works intelligence and coordination platfo
 - **Citizen Signal Reporting:** Residents can submit observations (e.g., abandoned trenches, uncoordinated crews) tagged to specific coordinates with a community confirmation (upvote) system.
 
 ## 📸 Screenshots / Demo
-*(Note: A required 2-5 minute demo video is currently missing from this repository. This must be added prior to final hackathon submission.)*
+### Demo Video Drive Link : [here](https://drive.google.com/drive/folders/1TlCrJQdig-YTGVag1k4-71_5T5i5Q9Nv?usp=sharing)
 
 ## ⚙️ How it Works
 1. **Data Ingestion:** PDFs are parsed via `unpdf`. Google Gemini 3.8 Flash extracts structured metadata (dates, departments, coordinates) using strict `zod` schemas.
