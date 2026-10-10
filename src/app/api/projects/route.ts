@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getProjects, createProject } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
-
 // get all projects
-export async function GET() {
+export async function GET(_req: Request) {
   try {
     const data = await getProjects();
     return NextResponse.json(data);
