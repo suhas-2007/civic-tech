@@ -1,6 +1,7 @@
 # CivicTech: Public Works Intelligence & Coordination Platform
 > **Bits & Bytes Hackathon 2026**
 
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20on%20Vercel-success?style=flat&logo=vercel)](https://civic-tech-eta.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/suhas-2007/civic-tech)
 [![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?logo=supabase)](https://supabase.com)
 [![Next.js](https://img.shields.io/badge/Framework-Next.js%2016-black?logo=next.js)](https://nextjs.org)
@@ -11,9 +12,12 @@ CivicTech is an autonomous intelligence and coordination platform for public wor
 
 ## 🌐 Live Deployments & Links
 
+- 🚀 **Live Production App**: [https://civic-tech-eta.vercel.app](https://civic-tech-eta.vercel.app)
+- 🗺️ **Interactive Workspace**: [https://civic-tech-eta.vercel.app/workspace](https://civic-tech-eta.vercel.app/workspace)
 - 💻 **GitHub Repository**: [https://github.com/suhas-2007/civic-tech](https://github.com/suhas-2007/civic-tech)
 - 🗄️ **Supabase Database**: Project `civictech` (`kxixgmfudpozwpqhewds.supabase.co`) — PostgreSQL with Row Level Security (RLS)
-- 🚀 **Vercel Production Deployment**: Deployed with automated CI/CD from branch `main`
+- 🌿 **Git Branch Preview**: [https://civic-tech-git-main-suhas-raavi.vercel.app](https://civic-tech-git-main-suhas-raavi.vercel.app)
+
 
 ---
 
