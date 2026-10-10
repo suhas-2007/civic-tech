@@ -14,7 +14,7 @@ Public-works information is scattered across obscure notices, disconnected munic
 ## 💡 Our Solution
 Civorium acts as an autonomous public-works intelligence and coordination platform. It ingests unstructured municipal notices, extracts structured project data using generative AI, and maps them geospatially. 
 
-**The differentiator:** It is *not* just a chatbot. Civorium relies on a **deterministic coordination engine** to mathematically calculate spatial proximity and timeline overlaps, ensuring that flagged conflicts are based on verifiable data relationships, while relying on AI only for document extraction and evidence-grounded explanation.
+**The differentiator:** It is *not* just a chatbot. Civorium relies on a **deterministic coordination engine** to mathematically calculate spatial proximity and timeline overlaps, ensuring that flagged conflicts are based on verifiable data relationships, while relying on AI only for document extraction and evidence grounded explanation.
 
 ## 🌟 Key Features
 - **Deterministic Coordination Engine:** Detects physical proximity (via Haversine formula) and timeline overlaps between departments, flagging active coordination clashes (e.g., Uncoordinated Digging).
