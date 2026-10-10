@@ -85,12 +85,35 @@ export async function POST(req: Request) {
 
     const parsedJson = JSON.parse(response.text);
     
-    // Validate with Zod
+    // Validate with Zod so bad AI outputs don't corrupt our database
     const validated = ExtractionSchema.parse(parsedJson);
+
+    // If the frontend asked us to save directly to Supabase / local DB
+    const autoSave = formData.get('saveToDb') === 'true';
+    let savedProject = null;
+
+    if (autoSave) {
+      const { createProject } = await import('@/lib/db');
+      const saveResult = await createProject({
+        title: validated.title,
+        description: validated.description,
+        department: validated.department || 'Public Notice Board',
+        contractor: validated.contractor || 'Assigned Contractor',
+        workType: 'road',
+        status: 'planned',
+        plannedStartDate: validated.plannedStartDate,
+        plannedEndDate: validated.plannedEndDate,
+        addressText: validated.addressText,
+        sourceIds: [file.name],
+        dataOrigin: 'public',
+      });
+      savedProject = saveResult.project;
+    }
 
     return NextResponse.json({
       success: true,
       data: validated,
+      savedProject,
       sourceTitle: file.name,
       extractedTextPreview: text.substring(0, 200) + '...'
     });

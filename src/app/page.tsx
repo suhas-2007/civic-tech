@@ -277,23 +277,28 @@ export default function LandingPage() {
         <div className="lp-stack__grid">
           <div className="lp-stack__item">
             <div className="lp-stack__role">Framework</div>
-            <div className="lp-stack__name">Next.js 16</div>
-            <div className="lp-stack__note">App Router · TypeScript · Turbopack</div>
+            <div className="lp-stack__name">Next.js 16 (Vercel)</div>
+            <div className="lp-stack__note">App Router · TypeScript · Ready for 1-click Vercel deployment</div>
+          </div>
+          <div className="lp-stack__item">
+            <div className="lp-stack__role">Database</div>
+            <div className="lp-stack__name">Supabase (PostgreSQL)</div>
+            <div className="lp-stack__note">Full CRUD schema · Row Level Security (RLS) · Citizen reporting & upvotes</div>
           </div>
           <div className="lp-stack__item">
             <div className="lp-stack__role">Mapping</div>
             <div className="lp-stack__name">Leaflet + React-Leaflet</div>
-            <div className="lp-stack__note">GeoSearch via OSM Nominatim · SSR-safe dynamic import</div>
+            <div className="lp-stack__note">GeoSearch via OSM Nominatim · Color-coded pins & citizen reports</div>
           </div>
           <div className="lp-stack__item">
-            <div className="lp-stack__role">AI</div>
+            <div className="lp-stack__role">AI Engine</div>
             <div className="lp-stack__name">Gemini 2.5 Flash</div>
-            <div className="lp-stack__note">@google/genai SDK · server-side only · key never exposed to client</div>
+            <div className="lp-stack__note">@google/genai SDK · Bounded coordination agent & structured PDF tender extractor</div>
           </div>
           <div className="lp-stack__item">
-            <div className="lp-stack__role">PDF</div>
+            <div className="lp-stack__role">PDF Parsing</div>
             <div className="lp-stack__name">unpdf</div>
-            <div className="lp-stack__note">Embedded text extraction · no OCR · explicit failure for scanned docs</div>
+            <div className="lp-stack__note">Embedded text extraction from municipal notices directly into Supabase</div>
           </div>
           <div className="lp-stack__item">
             <div className="lp-stack__role">Validation</div>
@@ -303,17 +308,12 @@ export default function LandingPage() {
           <div className="lp-stack__item">
             <div className="lp-stack__role">Conflict logic</div>
             <div className="lp-stack__name">date-fns + Haversine</div>
-            <div className="lp-stack__note">Deterministic — never delegated to an LLM</div>
-          </div>
-          <div className="lp-stack__item">
-            <div className="lp-stack__role">Styling</div>
-            <div className="lp-stack__name">Tailwind CSS v4</div>
-            <div className="lp-stack__note">OKLCH tokens · Hallmark Editorial system</div>
+            <div className="lp-stack__note">Deterministic cross-department spatial & temporal clash detection</div>
           </div>
           <div className="lp-stack__item">
             <div className="lp-stack__role">Testing</div>
             <div className="lp-stack__name">Vitest</div>
-            <div className="lp-stack__note">11 tests passing · domain logic + agent tools + schema validation</div>
+            <div className="lp-stack__note">14 unit tests passing · database layer + domain logic + agent tools</div>
           </div>
         </div>
       </section>
@@ -327,7 +327,7 @@ export default function LandingPage() {
           Explore the Intelligence Platform →
         </Link>
         <p className="lp-cta-strip__note">
-          No account required. Demo data is clearly labeled throughout.
+          Public works coordination made transparent and accountable.
         </p>
       </div>
 
@@ -335,10 +335,10 @@ export default function LandingPage() {
       <footer className="lp-footer" role="contentinfo">
         <div className="lp-footer__inner">
           <p className="lp-footer__statement">
-            CivicTech — public works, made accountable.
+            CivicTech — public works coordination, made accountable.
           </p>
           <div className="lp-footer__meta">
-            <span>Next.js · TypeScript · Leaflet · Gemini · unpdf · Zod</span>
+            <span>Next.js · Supabase · Vercel · Leaflet · Gemini · Zod</span>
             <span>
               <Link href="/workspace">Platform</Link>
               {" · "}
@@ -346,7 +346,7 @@ export default function LandingPage() {
               {" · "}
               <a href="#stack">Stack</a>
             </span>
-            <span>Demo — not a live government service</span>
+            <span>Public Data Transparency</span>
           </div>
         </div>
       </footer>

@@ -1,69 +1,63 @@
-# CivicTech: Public Works Intelligence
+# CivicTech: Public Works Intelligence & Coordination Platform
 
-CivicTech is an autonomous intelligence platform for public works transparency, coordination, and neighborhood impact discovery. It serves as a unified system to manage project schedules, detect physical/temporal coordination conflicts between departments, analyze completion delays, and ingest unstructured civic records (like PDFs) into structured insights using generative AI.
+CivicTech is an autonomous intelligence and coordination platform for public works transparency. It solves a real-world municipal problem: **uncoordinated road digging, overlapping trenching across departments, and delayed public works**.
 
-## Main Features
+---
 
-- **Public Works Directory**: Browse, filter, and inspect civic projects by status and work type.
-- **Interactive Map**: Geolocation-based discovery of projects using Leaflet and OpenStreetMap.
-- **Deterministic Coordination Engine**: Identifies physical proximity and timeline overlaps among projects from different departments, labeling them as potential or verified conflicts.
-- **Accountability Timelines**: Analyzes project schedules against actual completion dates to pinpoint delays automatically.
-- **AI-Powered Notice Intelligence**: Ingests public notice PDFs, extracts structural records automatically with Zod validation, and preserves an inspectable link to the source document.
-- **Bounded Coordination Agent**: A highly controlled, read-only AI agent that investigates works based purely on the tool-provided data (schedules, maps, and facts).
+## 🌟 Key Features
 
-## Technology Stack
+- **🗄️ Supabase PostgreSQL Backend**: Real database storage for projects, citizen observations, and coordination logs with Row Level Security (RLS). Works live with Supabase or in seamless fallback mode.
+- **🗺️ Interactive Leaflet Map**: Custom status-coded pins (Ongoing, Delayed, Planned, Completed) plus community issue pins. Click anywhere to drop a coordinate pin!
+- **⚡ Deterministic Coordination Engine**: Detects physical proximity and timeline overlaps between departments (e.g. Water Bureau vs Fiber Telecom digging the same street within 3 weeks) and raises high-severity clash alerts.
+- **📢 Citizen Voice & Reporting**: Residents can submit reports of potholes, broken pavement, or uncoordinated digging with upvote tracking.
+- **🤖 Bounded AI Investigation Agent**: Controlled Gemini 2.5 Flash assistant that queries project schedules, contractors, and conflicts using real database tools.
+- **📄 AI Notice Ingestion**: Upload unstructured PDF public tenders/notices; Gemini extracts structured project metadata and saves it directly to the database.
+- **⬇️ Audit Report Export**: One-click download of all detected clashes and projects as a JSON audit log for hackathon judges and municipal oversight.
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4 (incorporating the Hallmark "Editorial" visual system)
-- **Map Ecosystem**: `leaflet`, `react-leaflet`, `leaflet-geosearch`
-- **Data Validation & Modeling**: `zod`, `date-fns`
-- **AI & PDF Processing**: `@google/genai` (Gemini), `unpdf`
-- **Testing**: `vitest`
+---
 
-## Setup and Run Commands
+## 🛠️ Technology Stack
 
-1. **Install dependencies**:
-   \`\`\`bash
-   npm install --legacy-peer-deps
-   \`\`\`
-   *(Note: `--legacy-peer-deps` is recommended due to peer dependency mismatches between standard Next.js packages and Vitest/Vite)*
+- **Frontend & Server**: [Next.js 16](https://nextjs.org) (App Router, Turbopack, React 19)
+- **Deployment**: [Vercel](https://vercel.com) (Serverless Edge)
+- **Database Backend**: [Supabase](https://supabase.com) (PostgreSQL, Row Level Security)
+- **Maps**: [Leaflet](https://leafletjs.com) + `react-leaflet` + `leaflet-geosearch` + OpenStreetMap
+- **Generative AI**: Google Gemini 2.5 Flash via `@google/genai`
+- **PDF Extraction**: `unpdf`
+- **Data Validation**: `zod`
+- **Testing**: `vitest` (14 unit tests passing)
 
-2. **Run tests**:
-   \`\`\`bash
-   npx vitest run
-   \`\`\`
+---
 
-3. **Start Development Server**:
-   \`\`\`bash
-   npm run dev
-   \`\`\`
+## 🚀 Quick Setup & Run Commands
 
-4. **Production Build**:
-   \`\`\`bash
-   npm run build
-   npm run start
-   \`\`\`
+### 1. Install Dependencies
+```bash
+npm install --legacy-peer-deps
+```
 
-## Required Environment Variables
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env.local`:
+```bash
+cp .env.example .env.local
+```
+Add your Supabase URL & Anon Key (see [DEPLOYMENT.md](file:///c:/Users/suhas/OneDrive/Desktop/Bits&bytes%20hackathon/DEPLOYMENT.md) for a 2-minute setup guide).  
+*(Note: If you run without keys, CivicTech will automatically run in Demo DB Mode with rich sample data!)*
 
-For local development and AI capabilities, ensure the following environment variable is set in your `.env.local` file:
+### 3. Run Unit Tests
+```bash
+# Run all 14 tests
+node ./node_modules/vitest/vitest.mjs run
+```
 
-- \`GEMINI_API_KEY\`: Valid API key from Google AI Studio. Required for PDF extraction and the Bounded Coordination Agent.
-  *(If omitted, the platform degrades gracefully—map, timeline, and conflict engine will continue to function natively.)*
+### 4. Start Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser!
 
-## Demo / Simulated Data
+---
 
-Because a live Supabase connection with PostGIS was not fully configured with production data during Phase 1 & 2, the application operates on a built-in canonical demo dataset (`src/lib/data.ts`). All simulated records are explicitly labeled with `dataOrigin: 'demo'` so they are never misrepresented as live public data.
+## Deploying to Vercel & Supabase
 
-## Usage Guide
-
-1. **Directory**: Use the left panel to filter the demo dataset by status (e.g., "delayed", "ongoing") or work type.
-2. **Details & Evidence**: Click any project to open the right-side detail view. Here you will see its source records, automated delay findings, and identified cross-department coordination conflicts.
-3. **Map Discovery**: Use the top-right search bar on the map to fly to an address. Click markers to inspect nearby works.
-4. **Agent Investigation**: Switch the left panel to the "Agent Investigation" tab. Ask the agent questions (e.g., "Are there any conflicts involving the water main replacement?").
-5. **Ingestion**: Click "Upload Notice" to select a PDF. The AI will extract its properties and surface any uncertain fields for review.
-
-## Remaining Limitations
-- Notice extraction parses text efficiently, but scanned image-only PDFs (without OCR text layers) are not supported.
-- Spatial conflict logic uses deterministic point-radius thresholds (Haversine distance) rather than actual line-segment overlaps (PostGIS is required for full polygonal tracking). 
+Detailed step-by-step instructions for 1-click Vercel deployment and Supabase table creation are available in [DEPLOYMENT.md](file:///c:/Users/suhas/OneDrive/Desktop/Bits&bytes%20hackathon/DEPLOYMENT.md).

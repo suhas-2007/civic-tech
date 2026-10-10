@@ -35,6 +35,7 @@ export const ProjectSchema = z.object({
   addressText: z.string(),
   latitude: z.number().nullable(),
   longitude: z.number().nullable(),
+  budget: z.number().nullable().optional(),
   sourceIds: z.array(z.string()),
   dataOrigin: z.enum(['official', 'public', 'manual', 'demo']),
 });
@@ -56,3 +57,30 @@ export const ConflictFindingSchema = z.object({
 });
 
 export type ConflictFinding = z.infer<typeof ConflictFindingSchema>;
+
+// citizen report schema
+export const CitizenReportCategorySchema = z.enum([
+  'pothole',
+  'uncoordinated_digging',
+  'delayed_work',
+  'water_leak',
+  'noise_safety',
+  'other',
+]);
+
+export const CitizenReportSchema = z.object({
+  id: z.string(),
+  projectId: z.string().nullable().optional(),
+  category: CitizenReportCategorySchema,
+  title: z.string(),
+  description: z.string(),
+  addressText: z.string(),
+  latitude: z.number(),
+  longitude: z.number(),
+  status: z.enum(['pending_review', 'verified', 'resolved']).default('pending_review'),
+  upvotes: z.number().default(1),
+  createdAt: z.string().optional(),
+});
+
+export type CitizenReport = z.infer<typeof CitizenReportSchema>;
+export type CitizenReportCategory = z.infer<typeof CitizenReportCategorySchema>;
