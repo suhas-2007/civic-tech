@@ -24,10 +24,18 @@ export async function GET(_req: Request) {
     }
   }
 
+  let urlHost: string | null = null;
+  try {
+    if (url) {
+      const cleanUrl = url.trim().startsWith('http') ? url.trim() : `https://${url.trim()}`;
+      urlHost = new URL(cleanUrl).host;
+    }
+  } catch {}
+
   return NextResponse.json({
     isConfigured: isSupabaseConfigured,
     hasUrl: Boolean(url),
-    urlHost: url ? new URL(url).host : null,
+    urlHost,
     hasKey: Boolean(key),
     keyPrefix: key ? key.substring(0, 10) + '...' : null,
     querySuccess,
@@ -35,3 +43,4 @@ export async function GET(_req: Request) {
     rowCount,
   });
 }
+
