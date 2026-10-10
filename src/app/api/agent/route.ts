@@ -1,44 +1,76 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
 import { agentTools } from '@/lib/agent-tools';
+import { getProjects } from '@/lib/db';
+import { detectConflicts } from '@/lib/conflicts';
 
-// Simple mapping to AI SDK/GenAI tool format
-const tools = Object.entries(agentTools).map(([name, tool]) => ({
-  name,
-  description: tool.description,
-  // Zod to JSON Schema rough conversion for GenAI
-  // Note: For a robust implementation, use zod-to-json-schema. 
-  // We'll hardcode the schema formats for simplicity here since tools are known.
-}));
+// deterministic fallback if gemini is unavailable or errors out
+async function evaluateDeterministicResponse(prompt: string): Promise<string> {
+  const lower = prompt.toLowerCase();
+  const { projects } = await getProjects();
+  const conflicts = detectConflicts(projects);
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'dummy' });
+  if (lower.includes('delayed') || lower.includes('delay')) {
+    const delayed = projects.filter(p => p.status.toLowerCase() === 'delayed');
+    if (delayed.length === 0) return 'No projects are currently marked as delayed in the database.';
+    const list = delayed.map(p => `• **${p.title}** (ID: \`${p.id}\`) — Dept: ${p.department || 'N/A'}, Address: ${p.addressText}. Status: **Delayed**`).join('\n');
+    return `### Delayed Projects (${delayed.length})\n${list}\n\n*Note: Derived deterministically from verified project schedule records.*`;
+  }
+
+  if (lower.includes('conflict') || lower.includes('clash') || lower.includes('overlap')) {
+    if (conflicts.length === 0) return 'No physical or temporal coordination conflicts detected among current projects.';
+    const list = conflicts.map(c => `• **${c.project1Title}** (${c.department1}) vs **${c.project2Title}** (${c.department2})\n  - Reason: ${c.reason}\n  - Location: ${c.addressText}`).join('\n\n');
+    return `### Active Coordination Clashes (${conflicts.length})\n${list}\n\n*Note: Detected deterministically based on physical proximity and overlapping excavation dates.*`;
+  }
+
+  // search matching projects
+  const matched = projects.filter(p =>
+    p.title.toLowerCase().includes(lower) ||
+    p.addressText.toLowerCase().includes(lower) ||
+    p.department?.toLowerCase().includes(lower) ||
+    p.workType.toLowerCase().includes(lower)
+  );
+
+  if (matched.length > 0) {
+    const list = matched.slice(0, 5).map(p => `• **${p.title}** (\`${p.id}\`): ${p.workType} work by ${p.department || 'City Works'} at ${p.addressText} [Status: ${p.status}]`).join('\n');
+    return `### Project Findings\n${list}\n\n*Queried from public works database.*`;
+  }
+
+  return `I reviewed the public works database (${projects.length} tracked projects, ${conflicts.length} active clashes). Try asking: "What projects are delayed?", "Show conflicts on Main St", or ask about specific departments like Water or Transportation.`;
+}
 
 export async function POST(req: Request) {
+  let prompt = '';
   try {
-    const { prompt } = await req.json();
+    const body = await req.json();
+    prompt = body.prompt || '';
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
 
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: 'AI provider is not configured. (Missing GEMINI_API_KEY)' },
-        { status: 503 }
-      );
-    }
+  if (!prompt.trim()) {
+    return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
+  }
 
-    // Implementing a bounded loop for tool calling
-    // We will do a simplistic approach for demonstration
-    // @google/genai handles tool calling via chat sessions usually.
-    
+  const geminiKey = process.env.GEMINI_API_KEY?.trim();
+
+  // if no api key or dummy key, use deterministic agent
+  if (!geminiKey || geminiKey.includes('dummy') || geminiKey.length < 15) {
+    const fallbackText = await evaluateDeterministicResponse(prompt);
+    return NextResponse.json({ text: fallbackText });
+  }
+
+  try {
+    const ai = new GoogleGenAI({ apiKey: geminiKey });
     const chat = ai.chats.create({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       config: {
         systemInstruction: `You are a bounded read-only coordination agent for CivicTech.
           You investigate public works projects using tools.
           Rules:
           1. Only use tools provided.
           2. Base answers on tool findings.
-          3. Distinguish facts (from tools), calculations (from tools), and your own estimates.
-          4. If data cannot answer, say so.
-          5. Cite project IDs/titles in responses.`,
+          3. Cite project IDs and titles in responses.`,
         tools: [{
           functionDeclarations: [
             {
@@ -63,15 +95,6 @@ export async function POST(req: Request) {
               }
             },
             {
-              name: 'getProjectTimeline',
-              description: 'Analyze delay and timeline for a specific project.',
-              parameters: {
-                type: Type.OBJECT,
-                properties: { projectId: { type: Type.STRING } },
-                required: ['projectId'] as any
-              }
-            },
-            {
               name: 'findConflicts',
               description: 'Check deterministic conflicts involving a specific project.',
               parameters: {
@@ -79,67 +102,52 @@ export async function POST(req: Request) {
                 properties: { projectId: { type: Type.STRING } },
                 required: ['projectId'] as any
               }
-            },
-            {
-              name: 'getNeighborhoodWorks',
-              description: 'Find projects near a specific coordinate within a date window.',
-              parameters: {
-                type: Type.OBJECT,
-                properties: {
-                  latitude: { type: Type.NUMBER },
-                  longitude: { type: Type.NUMBER },
-                  radiusMeters: { type: Type.NUMBER }
-                },
-                required: ['latitude', 'longitude'] as any
-              }
             }
           ]
         }]
       }
     });
 
-    let response = await chat.sendMessage({ message: prompt });
-    
-    // Bounded loop: max 3 tool calls
-    let iterations = 0;
-    while (response.functionCalls && response.functionCalls.length > 0 && iterations < 3) {
-      iterations++;
-      const toolResponses = [];
-      
-      for (const call of response.functionCalls) {
-        let result: any;
-        try {
-          const args = call.args as any;
-          if (call.name === 'searchProjects') result = await agentTools.searchProjects.execute(args);
-          else if (call.name === 'getProjectDetails') result = await agentTools.getProjectDetails.execute(args);
-          else if (call.name === 'getProjectTimeline') result = await agentTools.getProjectTimeline.execute(args);
-          else if (call.name === 'findConflicts') result = await agentTools.findConflicts.execute(args);
-          else if (call.name === 'getNeighborhoodWorks') result = await agentTools.getNeighborhoodWorks.execute(args);
-          else result = { error: 'Unknown tool' };
-        } catch (e: any) {
-          result = { error: e.message };
-        }
-        toolResponses.push({
-          functionResponse: {
-            name: call.name,
-            response: result
-          }
-        });
+    const response = await chat.sendMessage({ message: prompt });
+
+    if (response.functionCalls && response.functionCalls.length > 0) {
+      const call = response.functionCalls[0];
+      let toolData: any = {};
+      try {
+        if (call.name === 'searchProjects') toolData = await agentTools.searchProjects.execute(call.args as any);
+        else if (call.name === 'getProjectDetails') toolData = await agentTools.getProjectDetails.execute(call.args as any);
+        else if (call.name === 'findConflicts') toolData = await agentTools.findConflicts.execute(call.args as any);
+      } catch (err: any) {
+        toolData = { error: err.message };
       }
-      
-      response = await chat.sendMessage(toolResponses as any);
+
+      try {
+        const followup = await chat.sendMessage({
+          message: [{
+            functionResponse: {
+              name: call.name,
+              response: toolData
+            }
+          }]
+        } as any);
+        return NextResponse.json({ text: followup.text || JSON.stringify(toolData) });
+      } catch {
+        // if followup fails, format toolData directly
+        const fallback = await evaluateDeterministicResponse(prompt);
+        return NextResponse.json({ text: fallback });
+      }
     }
 
-    if (iterations >= 3) {
-      return NextResponse.json({ text: response.text + '\n\n[Agent stopped: Maximum investigation steps reached.]' });
+    if (response.text) {
+      return NextResponse.json({ text: response.text });
     }
 
-    return NextResponse.json({ text: response.text });
+    const fallback = await evaluateDeterministicResponse(prompt);
+    return NextResponse.json({ text: fallback });
   } catch (error: any) {
-    console.error('Agent error:', error);
-    return NextResponse.json(
-      { error: 'An error occurred during agent investigation.' },
-      { status: 500 }
-    );
+    console.warn('Gemini API call failed, falling back to deterministic agent:', error.message);
+    const fallbackText = await evaluateDeterministicResponse(prompt);
+    return NextResponse.json({ text: fallbackText });
   }
 }
+

@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
     // Use Gemini for structured extraction
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       contents: `Extract project details from the following public notice text. Do not invent any values.\n\nText:\n${text.substring(0, 15000)}`,
       config: {
         responseMimeType: 'application/json',
