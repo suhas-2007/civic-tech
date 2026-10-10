@@ -20,8 +20,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CivicTech | Public Works Intelligence",
-  description: "Public infrastructure intelligence platform for transparency and coordination in municipal projects.",
+  title: "Civorium | Public Works Intelligence",
+  description: "Civorium public infrastructure intelligence platform for transparency and coordination in municipal projects.",
 };
 
 export default function RootLayout({

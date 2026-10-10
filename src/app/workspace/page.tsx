@@ -83,7 +83,7 @@ export default function Workspace() {
   const [agentMessages, setAgentMessages] = useState<{ role: string; content: string }[]>([
     {
       role: "agent",
-      content: "Hello! I can help investigate roadwork timelines, detect conflicting department projects, or find works near specific coordinates. Try asking: 'Which projects conflict on Main St?' or 'What projects are delayed?'"
+      content: "Hello! I am Civorium Agent. I can help investigate roadwork timelines, detect conflicting department projects, or find works near specific coordinates. Try asking: 'Which projects conflict on Main St?' or 'What projects are delayed?'"
     }
   ]);
   const [isAgentTyping, setIsAgentTyping] = useState(false);
@@ -288,7 +288,7 @@ export default function Workspace() {
   // export audit report as json
   const handleExportData = () => {
     const exportPayload = {
-      platform: "CivicTech",
+      platform: "Civorium",
       exportedAt: new Date().toISOString(),
       dataSource: dataSource,
       statistics: {
@@ -305,7 +305,7 @@ export default function Workspace() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `civictech-audit-report-${Date.now()}.json`;
+    a.download = `civorium-audit-report-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -332,7 +332,7 @@ export default function Workspace() {
             <div className="h-4 w-px bg-slate-300"></div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1.5">
-                <Building className="text-blue-600" size={20} /> CivicTech
+                <Building className="text-blue-600" size={20} /> Civorium
               </h1>
               <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
                 Bits & Bytes &apos;26
@@ -748,7 +748,7 @@ export default function Workspace() {
                     <div className={`font-bold text-[10px] uppercase tracking-wider mb-1 ${
                       msg.role === 'user' ? 'text-blue-100' : 'text-slate-400'
                     }`}>
-                      {msg.role === 'user' ? 'You' : 'CivicTech Agent'}
+                      {msg.role === 'user' ? 'You' : 'Civorium Agent'}
                     </div>
                     <div className="whitespace-pre-wrap">{msg.content}</div>
                   </div>
@@ -1247,7 +1247,7 @@ export default function Workspace() {
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 text-xs text-slate-800 space-y-4">
             <div className="flex justify-between items-center border-b pb-2">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Users className="text-blue-600" size={16} /> About CivicTech
+                <Users className="text-blue-600" size={16} /> About Civorium
               </h3>
               <button onClick={() => setShowTeamModal(false)} className="text-slate-400 hover:text-slate-700">
                 <X size={18} />
@@ -1256,7 +1256,7 @@ export default function Workspace() {
 
             <div className="space-y-3 leading-relaxed">
               <p>
-                <strong>CivicTech</strong> is an open-source public works intelligence platform designed to detect uncoordinated road excavations, track project delays across municipal departments, and empower citizens to report road hazards.
+                <strong>Civorium</strong> is an open-source public works intelligence platform designed to detect uncoordinated road excavations, track project delays across municipal departments, and empower citizens to report road hazards.
               </p>
 
               <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">

@@ -11,8 +11,8 @@ export default function LandingPage() {
       {/* ── N9 Edge-aligned nav ── */}
       <nav className="lp-nav" aria-label="Site navigation">
         <div className="lp-nav__inner">
-          <Link href="/" className="lp-nav__wordmark" aria-label="CivicTech home">
-            CivicTech
+          <Link href="/" className="lp-nav__wordmark" aria-label="Civorium home">
+            Civorium
           </Link>
           <ul className="lp-nav__links" role="list">
             <li><a href="#how-it-works">How it works</a></li>
@@ -35,7 +35,7 @@ export default function LandingPage() {
         </div>
         <div>
           <p className="lp-hero__body">
-            CivicTech connects public project records, detects cross-department coordination failures, traces accountability timelines, and answers investigators' questions — all from a single, evidence-first platform.
+            Civorium connects public project records, detects cross-department coordination failures, traces accountability timelines, and answers investigators' questions — all from a single, evidence-first platform.
           </p>
           <div className="lp-hero__actions">
             <Link href="/workspace" className="btn-primary">
@@ -64,7 +64,7 @@ export default function LandingPage() {
               Municipalities manage dozens of infrastructure projects simultaneously across water, roads, utilities, and public facilities. These projects are planned by separate departments with different budgets, contractors, and schedules — with no shared coordination layer.
             </p>
             <p className="lp-problem__body" style={{ marginTop: "1rem" }}>
-              The result: redundant excavation on the same street, pavement newly repaved then immediately ripped up, delays compounded by sequencing failures that no single department can see. CivicTech is built to surface those patterns before they compound into waste.
+              The result: redundant excavation on the same street, pavement newly repaved then immediately ripped up, delays compounded by sequencing failures that no single department can see. Civorium is built to surface those patterns before they compound into waste.
             </p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function LandingPage() {
                     <span className="lp-stage__badge lp-stage__badge--ai">Requires API key</span>
                   </div>
                   <p className="lp-stage__desc">
-                    Upload a public notice PDF. CivicTech extracts embedded text with unpdf, requests structured fields from Gemini with a defined JSON schema, validates every field with Zod, and flags uncertain or inferred values explicitly. Scanned image-only PDFs are clearly rejected — OCR is not performed.
+                    Upload a public notice PDF. Civorium extracts embedded text with unpdf, requests structured fields from Gemini with a defined JSON schema, validates every field with Zod, and flags uncertain or inferred values explicitly. Scanned image-only PDFs are clearly rejected — OCR is not performed.
                   </p>
                   <p className="lp-stage__desc" style={{ marginTop: "0.75rem", fontSize: "var(--text-sm)", color: "var(--lp-ink-3)" }}>
                     Extracted fields: title, description, department, contractor, planned dates, address. AI output is never accepted without Zod validation. Fields the model cannot confidently extract remain null — they are never fabricated.
@@ -335,7 +335,7 @@ export default function LandingPage() {
       <footer className="lp-footer" role="contentinfo">
         <div className="lp-footer__inner">
           <p className="lp-footer__statement">
-            CivicTech — public works coordination, made accountable.
+            Civorium — public works coordination, made accountable.
           </p>
           <div className="lp-footer__meta">
             <span>Next.js · Supabase · Vercel · Leaflet · Gemini · Zod</span>

@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     const chat = ai.chats.create({
       model: 'gemini-3.8-flash',
       config: {
-        systemInstruction: `You are a bounded read-only coordination agent for CivicTech.
+        systemInstruction: `You are a bounded read-only coordination agent for Civorium.
           You investigate public works projects using tools.
           Rules:
           1. Only use tools provided.
