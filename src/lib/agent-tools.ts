@@ -8,23 +8,38 @@ import { getDistance } from './neighborhood';
 export const agentTools = {
   // filter projects by status, work type or department
   searchProjects: {
-    description: 'Search for projects by status, work type, or department.',
+    description: 'Search for projects by text query (title/street/contractor), status, work type, or department.',
     parameters: z.object({
+      query: z.string().optional(),
       status: z.string().optional(),
       workType: z.string().optional(),
       department: z.string().optional(),
     }),
-    execute: async ({ status, workType, department }: { status?: string, workType?: string, department?: string }) => {
+    execute: async ({ query, status, workType, department }: { query?: string, status?: string, workType?: string, department?: string }) => {
       const { projects } = await getProjects();
       let results = projects;
+      if (query) {
+        const q = query.toLowerCase();
+        results = results.filter(p =>
+          p.title.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.addressText.toLowerCase().includes(q) ||
+          p.contractor?.toLowerCase().includes(q)
+        );
+      }
       if (status) results = results.filter(p => p.status.toLowerCase() === status.toLowerCase());
       if (workType) results = results.filter(p => p.workType.toLowerCase() === workType.toLowerCase());
       if (department) results = results.filter(p => p.department?.toLowerCase() === department.toLowerCase());
-      return results.slice(0, 5).map(p => ({
+      return results.slice(0, 10).map(p => ({
         id: p.id,
         title: p.title,
         status: p.status,
-        dates: `${p.plannedStartDate || 'TBD'} to ${p.plannedEndDate || 'TBD'}`
+        department: p.department,
+        contractor: p.contractor,
+        address: p.addressText,
+        plannedSchedule: `${p.plannedStartDate || 'TBD'} to ${p.plannedEndDate || 'TBD'}`,
+        actualStartDate: p.actualStartDate || null,
+        actualEndDate: p.actualEndDate || null
       }));
     },
   },

@@ -56,34 +56,55 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'PDF contains no extractable text. Scanned documents without OCR are not supported.' }, { status: 400 });
     }
 
-    // Use Gemini for structured extraction
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
-      contents: `Extract project details from the following public notice text. Do not invent any values.\n\nText:\n${text.substring(0, 15000)}`,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            title: { type: Type.STRING },
-            description: { type: Type.STRING },
-            department: { type: Type.STRING, nullable: true },
-            contractor: { type: Type.STRING, nullable: true },
-            plannedStartDate: { type: Type.STRING, nullable: true },
-            plannedEndDate: { type: Type.STRING, nullable: true },
-            addressText: { type: Type.STRING },
-            uncertainFields: { type: Type.ARRAY, items: { type: Type.STRING } }
-          },
-          required: ['title', 'description', 'addressText', 'uncertainFields'] as any
-        }
-      }
-    });
+    // Use Gemini for structured extraction with candidate model fallback
+    const CANDIDATE_MODELS = [
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash-lite',
+      'gemini-3.8-flash'
+    ];
 
-    if (!response.text) {
-      throw new Error('Model returned empty response');
+    let extractedText = '';
+    let lastError: any = null;
+
+    for (const model of CANDIDATE_MODELS) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents: `Extract project details from the following public notice text. Do not invent any values.\n\nText:\n${text.substring(0, 15000)}`,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                department: { type: Type.STRING, nullable: true },
+                contractor: { type: Type.STRING, nullable: true },
+                plannedStartDate: { type: Type.STRING, nullable: true },
+                plannedEndDate: { type: Type.STRING, nullable: true },
+                addressText: { type: Type.STRING },
+                uncertainFields: { type: Type.ARRAY, items: { type: Type.STRING } }
+              },
+              required: ['title', 'description', 'addressText', 'uncertainFields'] as any
+            }
+          }
+        });
+
+        if (response.text) {
+          extractedText = response.text;
+          break;
+        }
+      } catch (err: any) {
+        lastError = err;
+        console.warn(`Ingest extraction model ${model} failed: ${err.message}. Trying next candidate...`);
+      }
     }
 
-    const parsedJson = JSON.parse(response.text);
+    if (!extractedText) {
+      throw lastError || new Error('Model returned empty response');
+    }
+
+    const parsedJson = JSON.parse(extractedText);
     
     // Validate with Zod so bad AI outputs don't corrupt our database
     const validated = ExtractionSchema.parse(parsedJson);
