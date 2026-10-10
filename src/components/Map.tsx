@@ -178,19 +178,19 @@ export default function CivicMap({
 
                   <p className="text-xs text-gray-600 line-clamp-2">{proj.description}</p>
 
-                  <div className="text-[11px] text-gray-500 border-t border-gray-100 pt-1 mt-1">
-                    <div>🏢 {proj.department || "Municipal Dept"}</div>
-                    <div>📍 {proj.addressText}</div>
+                  <div className="text-[11px] text-gray-500 border-t border-gray-100 pt-1 mt-1 space-y-0.5">
+                    <div><span className="font-mono text-[10px] text-gray-400 uppercase">Dept:</span> {proj.department || "Municipal Dept"}</div>
+                    <div><span className="font-mono text-[10px] text-gray-400 uppercase">Loc:</span> {proj.addressText}</div>
                     {hasClash && (
                       <div className="text-red-600 font-semibold mt-0.5 flex items-center gap-1">
-                        ⚠️ Cross-Department Conflict Detected!
+                        Cross-Department Conflict Detected
                       </div>
                     )}
                   </div>
 
                   <button
                     onClick={() => onSelectProject(proj.id)}
-                    className="mt-1 w-full text-center text-xs bg-slate-900 text-white hover:bg-slate-800 py-1 rounded font-medium transition"
+                    className="mt-1 w-full text-center text-xs bg-slate-900 text-white hover:bg-slate-800 py-1 rounded-[3px] font-medium transition"
                   >
                     Inspect in Detail →
                   </button>
@@ -213,28 +213,28 @@ export default function CivicMap({
               <Popup>
                 <div className="font-sans flex flex-col gap-1.5 p-1 min-w-[220px]">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">
-                      📢 Citizen Report
+                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-[3px] bg-purple-100 text-purple-800 font-mono">
+                      Citizen Report
                     </span>
-                    <span className="text-[11px] text-gray-500 font-medium">
-                      👍 {report.upvotes} upvotes
+                    <span className="text-[11px] text-gray-500 font-medium font-mono tabular-nums">
+                      {report.upvotes} validations
                     </span>
                   </div>
 
                   <h3 className="font-bold text-sm text-gray-900">{report.title}</h3>
                   <p className="text-xs text-gray-600">{report.description}</p>
 
-                  <div className="text-[11px] text-gray-500 border-t border-gray-100 pt-1">
-                    <div>📍 {report.addressText}</div>
-                    <div className="capitalize">🏷️ Category: {report.category.replace("_", " ")}</div>
+                  <div className="text-[11px] text-gray-500 border-t border-gray-100 pt-1 space-y-0.5">
+                    <div><span className="font-mono text-[10px] text-gray-400 uppercase">Loc:</span> {report.addressText}</div>
+                    <div className="capitalize"><span className="font-mono text-[10px] text-gray-400 uppercase">Category:</span> {report.category.replace("_", " ")}</div>
                   </div>
 
                   {onUpvoteReport && (
                     <button
                       onClick={() => onUpvoteReport(report.id)}
-                      className="mt-1 w-full text-center text-xs bg-purple-600 hover:bg-purple-700 text-white py-1 rounded font-medium transition flex items-center justify-center gap-1"
+                      className="mt-1 w-full text-center text-xs bg-purple-600 hover:bg-purple-700 text-white py-1 rounded-[3px] font-medium transition flex items-center justify-center gap-1"
                     >
-                      👍 Upvote Issue ({report.upvotes})
+                      Confirm Observation ({report.upvotes})
                     </button>
                   )}
                 </div>
@@ -244,27 +244,27 @@ export default function CivicMap({
         })}
       </MapContainer>
 
-      {/* Map Legend Overlay for judges & citizens */}
-      <div className="absolute bottom-4 left-4 z-[500] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2.5 shadow-md text-xs font-sans max-w-[260px]">
-        <div className="font-bold text-gray-800 mb-1.5 flex items-center justify-between">
-          <span>Map Legend</span>
-          <span className="text-[10px] text-gray-400 font-normal">Click map to pin</span>
+      {/* Map HUD Legend Overlay */}
+      <div className="absolute bottom-4 left-4 z-[500] bg-white/95 backdrop-blur-xs border border-slate-300/80 rounded-[5px] p-2.5 shadow-sm text-xs font-sans max-w-[260px]">
+        <div className="font-semibold text-slate-900 text-[11px] mb-1.5 flex items-center justify-between pb-1 border-b border-slate-100">
+          <span className="uppercase tracking-wider font-mono text-[9px] text-slate-500">Map Legend</span>
+          <span className="text-[9px] font-mono text-slate-400">Click to pin</span>
         </div>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] text-gray-700">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-700">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Ongoing
+            <span className="w-2 h-2 rounded-[2px] bg-blue-600"></span> Ongoing
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> Delayed / Clash
+            <span className="w-2 h-2 rounded-[2px] bg-red-600"></span> Delayed / Clash
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-400"></span> Planned
+            <span className="w-2 h-2 rounded-[2px] bg-amber-500"></span> Planned
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> Completed
+            <span className="w-2 h-2 rounded-[2px] bg-emerald-600"></span> Completed
           </div>
-          <div className="flex items-center gap-1.5 col-span-2 pt-0.5 border-t border-gray-100">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-600"></span> 📢 Citizen Observation
+          <div className="flex items-center gap-1.5 col-span-2 pt-1 border-t border-slate-100">
+            <span className="w-2 h-2 rounded-[2px] bg-purple-600"></span> Citizen Observation
           </div>
         </div>
       </div>
