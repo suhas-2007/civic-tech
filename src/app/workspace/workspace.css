@@ -1,0 +1,294 @@
+/*
+ * Workspace design tokens — scoped to .ws-root
+ * Adapts warm paper palette to the data-dense operational console.
+ * Overwrites hard-coded slate/white/emerald values without touching Leaflet.
+ */
+
+.ws-root {
+  background: #F2F0E8;
+  color: #191C1A;
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+/* ── Header chrome ── */
+.ws-header {
+  background: #E6E2D7;
+  border-bottom: 1px solid #D9C9AE;
+}
+
+.ws-wordmark {
+  font-family: var(--font-display, "Arial Narrow", sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #191C1A;
+}
+
+.ws-telemetry {
+  background: #F2F0E8;
+  border-top: 1px solid #D9C9AE;
+}
+
+/* ── Left panel ── */
+.ws-panel {
+  background: #F2F0E8;
+  border-right: 1px solid #D9C9AE;
+}
+
+.ws-tabs {
+  background: #E6E2D7;
+  border-bottom: 1px solid #D9C9AE;
+}
+
+.ws-tab {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  color: #6B706E;
+  transition: color 100ms, background 100ms;
+}
+.ws-tab:hover {
+  color: #191C1A;
+  background: color-mix(in srgb, #D9C9AE 30%, transparent);
+}
+.ws-tab--active-dir     { border-bottom: 2px solid #191C1A; color: #191C1A; background: #F2F0E8; }
+.ws-tab--active-clash   { border-bottom: 2px solid #C85B43; color: #C85B43; background: #F2F0E8; }
+.ws-tab--active-signals { border-bottom: 2px solid #155B45; color: #155B45; background: #F2F0E8; }
+.ws-tab--active-agent   { border-bottom: 2px solid #4A6E8A; color: #4A6E8A; background: #F2F0E8; }
+.ws-tab--active-notice  { border-bottom: 2px solid #155B45; color: #155B45; background: #F2F0E8; }
+
+/* ── Directory list rows ── */
+.ws-project-row {
+  background: #F2F0E8;
+  border-bottom: 1px solid #E6E2D7;
+  transition: background 100ms;
+}
+.ws-project-row:hover {
+  background: #E6E2D7;
+}
+.ws-project-row--selected {
+  background: color-mix(in srgb, #155B45 8%, #F2F0E8);
+  border-left: 2px solid #155B45 !important;
+}
+
+/* ── Status badges in workspace ── */
+.ws-status {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid;
+}
+.ws-status--ongoing   { color: #155B45; border-color: color-mix(in srgb, #155B45 50%, transparent); background: color-mix(in srgb, #155B45 8%, transparent); }
+.ws-status--delayed   { color: #C85B43; border-color: color-mix(in srgb, #C85B43 50%, transparent); background: color-mix(in srgb, #C85B43 8%, transparent); }
+.ws-status--planned   { color: #4A6E8A; border-color: color-mix(in srgb, #4A6E8A 50%, transparent); background: color-mix(in srgb, #4A6E8A 8%, transparent); }
+.ws-status--completed { color: #3D4240; border-color: color-mix(in srgb, #3D4240 50%, transparent); background: color-mix(in srgb, #3D4240 8%, transparent); }
+.ws-status--paused    { color: #7A6848; border-color: color-mix(in srgb, #7A6848 50%, transparent); background: color-mix(in srgb, #7A6848 8%, transparent); }
+
+/* ── Inspector / detail drawer ── */
+.ws-inspector {
+  background: #F2F0E8;
+  border-left: 1px solid #D9C9AE;
+}
+
+.ws-inspector-header {
+  background: #E6E2D7;
+  border-bottom: 1px solid #D9C9AE;
+}
+
+.ws-data-block {
+  border: 1px solid #D9C9AE;
+  background: #E6E2D7;
+}
+
+.ws-data-row {
+  border-top: 1px solid #D9C9AE;
+  padding: 0.625rem 0.75rem;
+}
+.ws-data-row:first-child { border-top: none; }
+
+.ws-data-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6B706E;
+}
+
+.ws-data-value {
+  font-family: var(--font-body, system-ui);
+  font-size: 0.8125rem;
+  color: #191C1A;
+  margin-top: 0.2rem;
+}
+
+.ws-data-value--mono {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+}
+
+/* ── Alert boxes ── */
+.ws-alert {
+  border: 1px solid;
+  padding: 0.875rem 1rem;
+}
+
+.ws-alert--delay {
+  background: color-mix(in srgb, #C85B43 6%, #F2F0E8);
+  border-color: color-mix(in srgb, #C85B43 35%, transparent);
+  color: #7A3020;
+}
+
+.ws-alert--clash {
+  background: color-mix(in srgb, #C85B43 8%, #F2F0E8);
+  border-color: color-mix(in srgb, #C85B43 40%, transparent);
+  color: #7A3020;
+  border-left: 3px solid #C85B43;
+}
+
+.ws-alert__title {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+/* ── Action buttons in workspace ── */
+.ws-btn-primary {
+  background: #191C1A;
+  color: #F2F0E8;
+  font-family: var(--font-body, system-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.ws-btn-primary:hover { background: #2D3230; }
+
+.ws-btn-signal {
+  background: #C85B43;
+  color: #F2F0E8;
+  font-family: var(--font-body, system-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.ws-btn-signal:hover { background: #A54836; }
+
+.ws-btn-ghost {
+  background: transparent;
+  color: #3D4240;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #D9C9AE;
+  cursor: pointer;
+  transition: border-color 150ms, background 150ms;
+}
+.ws-btn-ghost:hover { border-color: #191C1A; background: #E6E2D7; }
+
+/* ── Modal chrome ── */
+.ws-modal-bg {
+  background: rgba(25, 28, 26, 0.65);
+}
+
+.ws-modal {
+  background: #F2F0E8;
+  border: 1px solid #D9C9AE;
+  box-shadow: 0 8px 32px -4px rgba(25, 28, 26, 0.25);
+}
+
+.ws-modal-header {
+  border-bottom: 1px solid #D9C9AE;
+}
+
+.ws-modal-footer {
+  border-top: 1px solid #D9C9AE;
+}
+
+/* ── Agent console ── */
+.ws-console {
+  background: #F2F0E8;
+}
+
+.ws-console-msg--agent {
+  background: #E6E2D7;
+  border: 1px solid #D9C9AE;
+  color: #191C1A;
+}
+
+.ws-console-msg--user {
+  background: #191C1A;
+  border: 1px solid #191C1A;
+  color: #F2F0E8;
+}
+
+.ws-console-input {
+  background: #F2F0E8;
+  border: 1px solid #D9C9AE;
+  color: #191C1A;
+  font-family: var(--font-body, system-ui);
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+}
+.ws-console-input:focus {
+  outline: none;
+  border-color: #155B45;
+}
+
+/* ── Clash / conflict row ── */
+.ws-clash-row {
+  border: 1px solid color-mix(in srgb, #C85B43 40%, transparent);
+  background: color-mix(in srgb, #C85B43 5%, #F2F0E8);
+  padding: 0.875rem;
+}
+
+/* ── Notice panel upload zone ── */
+.ws-upload-zone {
+  border: 1px dashed #D9C9AE;
+  background: #E6E2D7;
+  transition: border-color 150ms;
+}
+.ws-upload-zone:hover { border-color: #155B45; }
+
+/* ── Clash count badge ── */
+.ws-count-badge--clash {
+  background: color-mix(in srgb, #C85B43 15%, transparent);
+  color: #A54836;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0;
+}
+
+.ws-count-badge--signal {
+  background: color-mix(in srgb, #155B45 12%, transparent);
+  color: #0E3E30;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0;
+}
+
+/* ── Origin badge ── */
+.ws-origin-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6B706E;
+  border: 1px solid #D9C9AE;
+  padding: 0.1rem 0.4rem;
+}

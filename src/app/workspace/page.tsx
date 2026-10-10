@@ -33,9 +33,11 @@ import {
   Map as MapIcon,
   Info
 } from "lucide-react";
+import "./workspace.css";
 
 // dynamic map import for client side rendering
 const CivicMap = dynamic(() => import("@/components/Map"), { ssr: false });
+
 
 export default function Workspace() {
   // projects and citizen reports state
@@ -352,10 +354,10 @@ export default function Workspace() {
   const totalBudget = projects.reduce((acc, p) => acc + (p.budget || 0), 0);
 
   return (
-    <main className="flex flex-col h-screen overflow-hidden bg-[#f8f9fa] text-slate-900 font-sans antialiased">
+    <main className="ws-root flex flex-col h-screen overflow-hidden">
       
       {/* ── 1. COMMAND BAR (Top Executive Navigation) ── */}
-      <header className="flex-none bg-white border-b border-slate-200 z-20">
+      <header className="ws-header flex-none z-20">
         <div className="flex items-center justify-between px-3 sm:px-4 py-2 gap-3">
           
           {/* Left: Product Wordmark & Context */}
@@ -370,10 +372,10 @@ export default function Workspace() {
             </Link>
             <div className="h-3.5 w-px bg-slate-200"></div>
             <div className="flex items-baseline gap-2">
-              <span className="font-mono text-sm font-bold tracking-wider text-slate-900">
+              <span className="ws-wordmark text-sm">
                 CIVORIUM
               </span>
-              <span className="hidden md:inline-block text-[10px] font-mono tracking-widest uppercase text-slate-500">
+              <span className="hidden md:inline-block text-[10px] font-mono tracking-widest uppercase" style={{ color: "#6B706E" }}>
                 OPS · CONTROL
               </span>
             </div>
@@ -426,7 +428,7 @@ export default function Workspace() {
 
             <button
               onClick={() => setShowReportModal(true)}
-              className="inline-flex items-center gap-1 text-[11px] font-medium bg-purple-700 hover:bg-purple-800 text-white px-2.5 py-1.5 rounded-[3px] transition cursor-pointer"
+              className="ws-btn-signal inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 transition cursor-pointer"
             >
               <Megaphone size={13} />
               <span className="hidden sm:inline">Log Signal</span>
@@ -452,7 +454,7 @@ export default function Workspace() {
         </div>
 
         {/* ── T4 TELEMETRY STRIP (Hallmark Continuous Ribbon) ── */}
-        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50/70 px-3 sm:px-4 py-1 text-[11px] font-mono text-slate-600 overflow-x-auto whitespace-nowrap">
+        <div className="ws-telemetry flex items-center justify-between px-3 sm:px-4 py-1 text-[11px] font-mono overflow-x-auto whitespace-nowrap" style={{ color: "#3D4240", borderTop: "1px solid #D9C9AE" }}>
           <div className="flex items-center gap-4 sm:gap-6 divide-x divide-slate-200">
             <div className="flex items-center gap-1.5">
               <span className="text-slate-400 uppercase text-[10px]">PROJECTS</span>
@@ -504,37 +506,33 @@ export default function Workspace() {
 
         {/* ── LEFT PANEL: OPERATIONAL WORKSPACE TABS ── */}
         <aside
-          className={`w-full md:w-[390px] lg:w-[410px] flex-none bg-white border-r border-slate-200 flex flex-col overflow-hidden z-10 ${
+          className={`ws-panel w-full md:w-[390px] lg:w-[410px] flex-none flex flex-col overflow-hidden z-10 ${
             mobileView === 'map' ? 'hidden md:flex' : 'flex'
           }`}
         >
           
-          {/* Segmented Tab Bar (Anti-Slop: Clean text + Lucide icons + no emojis) */}
-          <div className="flex border-b border-slate-200 bg-slate-50 text-[11px] font-medium text-slate-600">
+          {/* Segmented Tab Bar */}
+          <div className="ws-tabs flex text-[11px]">
             <button
               onClick={() => setActiveTab('directory')}
-              className={`flex-1 py-2 px-1 text-center transition-colors flex items-center justify-center gap-1 border-b-2 ${
-                activeTab === 'directory'
-                  ? 'border-slate-900 text-slate-900 bg-white font-semibold'
-                  : 'border-transparent hover:text-slate-900 hover:bg-slate-100/70'
+              className={`ws-tab flex-1 py-2 px-1 text-center flex items-center justify-center gap-1 border-b-2 ${
+                activeTab === 'directory' ? 'ws-tab--active-dir' : 'border-transparent'
               }`}
             >
-              <ListFilter size={13} className="text-slate-400" />
+              <ListFilter size={13} />
               <span>Directory</span>
             </button>
 
             <button
               onClick={() => setActiveTab('conflicts')}
-              className={`flex-1 py-2 px-1 text-center transition-colors flex items-center justify-center gap-1 border-b-2 ${
-                activeTab === 'conflicts'
-                  ? 'border-red-600 text-red-700 bg-white font-semibold'
-                  : 'border-transparent hover:text-slate-900 hover:bg-slate-100/70'
+              className={`ws-tab flex-1 py-2 px-1 text-center flex items-center justify-center gap-1 border-b-2 ${
+                activeTab === 'conflicts' ? 'ws-tab--active-clash' : 'border-transparent'
               }`}
             >
-              <ShieldAlert size={13} className={conflicts.length > 0 ? 'text-red-600' : 'text-slate-400'} />
+              <ShieldAlert size={13} />
               <span>Clashes</span>
               {conflicts.length > 0 && (
-                <span className="font-mono text-[9px] px-1 rounded-[2px] bg-red-100 text-red-800 font-bold tabular-nums">
+                <span className="ws-count-badge--clash tabular-nums">
                   {conflicts.length}
                 </span>
               )}
@@ -542,16 +540,14 @@ export default function Workspace() {
 
             <button
               onClick={() => setActiveTab('reports')}
-              className={`flex-1 py-2 px-1 text-center transition-colors flex items-center justify-center gap-1 border-b-2 ${
-                activeTab === 'reports'
-                  ? 'border-purple-600 text-purple-700 bg-white font-semibold'
-                  : 'border-transparent hover:text-slate-900 hover:bg-slate-100/70'
+              className={`ws-tab flex-1 py-2 px-1 text-center flex items-center justify-center gap-1 border-b-2 ${
+                activeTab === 'reports' ? 'ws-tab--active-signals' : 'border-transparent'
               }`}
             >
-              <Megaphone size={13} className="text-purple-600" />
+              <Megaphone size={13} />
               <span>Signals</span>
               {citizenReports.length > 0 && (
-                <span className="font-mono text-[9px] px-1 rounded-[2px] bg-purple-100 text-purple-800 font-bold tabular-nums">
+                <span className="ws-count-badge--signal tabular-nums">
                   {citizenReports.length}
                 </span>
               )}
@@ -559,25 +555,21 @@ export default function Workspace() {
 
             <button
               onClick={() => setActiveTab('agent')}
-              className={`flex-1 py-2 px-1 text-center transition-colors flex items-center justify-center gap-1 border-b-2 ${
-                activeTab === 'agent'
-                  ? 'border-blue-600 text-blue-700 bg-white font-semibold'
-                  : 'border-transparent hover:text-slate-900 hover:bg-slate-100/70'
+              className={`ws-tab flex-1 py-2 px-1 text-center flex items-center justify-center gap-1 border-b-2 ${
+                activeTab === 'agent' ? 'ws-tab--active-agent' : 'border-transparent'
               }`}
             >
-              <Terminal size={13} className="text-blue-600" />
+              <Terminal size={13} />
               <span>Analyst</span>
             </button>
 
             <button
               onClick={() => setActiveTab('ingest')}
-              className={`flex-1 py-2 px-1 text-center transition-colors flex items-center justify-center gap-1 border-b-2 ${
-                activeTab === 'ingest'
-                  ? 'border-emerald-600 text-emerald-700 bg-white font-semibold'
-                  : 'border-transparent hover:text-slate-900 hover:bg-slate-100/70'
+              className={`ws-tab flex-1 py-2 px-1 text-center flex items-center justify-center gap-1 border-b-2 ${
+                activeTab === 'ingest' ? 'ws-tab--active-notice' : 'border-transparent'
               }`}
             >
-              <FileText size={13} className="text-emerald-600" />
+              <FileText size={13} />
               <span>Notice</span>
             </button>
           </div>
@@ -657,10 +649,10 @@ export default function Workspace() {
                           setSelectedProjectId(proj.id);
                           setMobileView('map');
                         }}
-                        className={`w-full text-left p-3 transition flex flex-col gap-1 border-l-2 hover:bg-slate-50 ${
+                        className={`w-full text-left p-3 transition flex flex-col gap-1 border-l-2 ${
                           isSelected
-                            ? 'bg-blue-50/60 border-l-blue-600'
-                            : 'border-l-transparent'
+                            ? 'ws-project-row ws-project-row--selected'
+                            : 'ws-project-row border-l-transparent'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
@@ -668,17 +660,7 @@ export default function Workspace() {
                             <span className="font-mono text-[10px] text-slate-400 font-semibold">
                               #{String(idx + 1).padStart(2, '0')}
                             </span>
-                            <span
-                              className={`text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 rounded-[2px] ${
-                                proj.status === 'delayed'
-                                  ? 'bg-red-100 text-red-800'
-                                  : proj.status === 'ongoing'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : proj.status === 'completed'
-                                  ? 'bg-emerald-100 text-emerald-800'
-                                  : 'bg-amber-100 text-amber-800'
-                              }`}
-                            >
+                            <span className={`ws-status ws-status--${proj.status}`}>
                               {proj.status}
                             </span>
                           </div>
@@ -735,13 +717,13 @@ export default function Workspace() {
                   return (
                     <div
                       key={conflict.id || idx}
-                      className="border border-red-200 bg-white rounded-[3px] p-3 space-y-2"
+                      className="ws-clash-row space-y-2 mb-2"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 rounded-[2px] bg-red-100 text-red-800 flex items-center gap-1">
+                        <span className="ws-alert__title text-[#7A3020] flex items-center gap-1">
                           <AlertTriangle size={11} /> {conflict.type.replace('_', ' ')}
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-red-700 uppercase">
+                        <span className="text-[10px] font-mono font-bold uppercase" style={{ color: "#A54836" }}>
                           {conflict.severity}
                         </span>
                       </div>
@@ -806,10 +788,10 @@ export default function Workspace() {
                   citizenReports.map(rep => (
                     <div key={rep.id} className="p-3 space-y-1 hover:bg-slate-50 transition">
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 rounded-[2px] bg-purple-100 text-purple-800">
+                        <span className="ws-origin-badge">
                           {rep.category.replace('_', ' ')}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 uppercase">
+                        <span className="text-[10px] font-mono opacity-60 uppercase">
                           {rep.status.replace('_', ' ')}
                         </span>
                       </div>
@@ -826,7 +808,7 @@ export default function Workspace() {
                         <span className="truncate max-w-[210px]">{rep.addressText}</span>
                         <button
                           onClick={() => handleUpvoteReport(rep.id)}
-                          className="flex items-center gap-1 text-[11px] font-mono text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 px-1.5 py-0.5 rounded-[2px] transition border border-purple-200"
+                          className="ws-btn-ghost flex items-center gap-1 px-1.5 py-0.5"
                         >
                           CONFIRM: <span className="font-bold tabular-nums">{rep.upvotes}</span>
                         </button>
@@ -840,26 +822,26 @@ export default function Workspace() {
 
           {/* TAB 4: INVESTIGATION CONSOLE (AI Analyst) */}
           {activeTab === 'agent' && (
-            <div className="flex-1 flex flex-col p-3 text-xs h-full bg-slate-50/40">
+            <div className="ws-console flex-1 flex flex-col p-3 text-xs h-full">
               
               {/* Presets Strip */}
-              <div className="flex gap-1 flex-wrap mb-2 pb-2 border-b border-slate-200">
-                <span className="text-[10px] font-mono text-slate-400 uppercase self-center mr-1">Audits:</span>
+              <div className="flex gap-1 flex-wrap mb-2 pb-2" style={{ borderBottom: "1px solid #D9C9AE" }}>
+                <span className="text-[10px] font-mono uppercase self-center mr-1" style={{ color: "#6B706E" }}>Audits:</span>
                 <button
                   onClick={() => handleAgentSubmit("Which projects on Main St have conflicts?")}
-                  className="text-[10px] font-mono bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-[2px] border border-slate-200 transition"
+                  className="ws-btn-ghost px-2 py-1 rounded-none"
                 >
                   Main St Conflicts
                 </button>
                 <button
                   onClick={() => handleAgentSubmit("What projects are currently delayed?")}
-                  className="text-[10px] font-mono bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-[2px] border border-slate-200 transition"
+                  className="ws-btn-ghost px-2 py-1 rounded-none"
                 >
                   Delayed Works
                 </button>
                 <button
                   onClick={() => handleAgentSubmit("Find projects within 500m of Main St water works")}
-                  className="text-[10px] font-mono bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-[2px] border border-slate-200 transition"
+                  className="ws-btn-ghost px-2 py-1 rounded-none"
                 >
                   Radius &lt; 500m
                 </button>
@@ -870,13 +852,13 @@ export default function Workspace() {
                 {agentMessages.map((msg, i) => (
                   <div
                     key={i}
-                    className={`p-2.5 rounded-[3px] border text-[11px] leading-relaxed ${
+                    className={`p-2.5 text-[11px] leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-slate-900 text-slate-100 border-slate-900 ml-4'
-                        : 'bg-white text-slate-800 border-slate-200 mr-2 shadow-2xs font-sans'
+                        ? 'ws-console-msg--user ml-4'
+                        : 'ws-console-msg--agent mr-2 font-sans'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1 pb-1 border-b border-slate-100/30 text-[9px] font-mono uppercase tracking-wider text-slate-400">
+                    <div className="flex items-center justify-between mb-1 pb-1 text-[9px] font-mono uppercase tracking-wider opacity-60" style={{ borderBottom: "1px solid currentColor" }}>
                       <span>{msg.role === 'user' ? 'OPERATOR' : 'CIVORIUM ANALYST'}</span>
                       {msg.timestamp && <span className="tabular-nums">{msg.timestamp}</span>}
                     </div>
@@ -884,28 +866,28 @@ export default function Workspace() {
                   </div>
                 ))}
                 {isAgentTyping && (
-                  <div className="p-2.5 bg-white border border-slate-200 rounded-[3px] text-slate-500 font-mono text-[11px] flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-[1px] bg-blue-600 animate-pulse"></span>
-                    <span>Querying municipal database & calculating intervals...</span>
+                  <div className="ws-console-msg--agent p-2.5 text-[11px] flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-[1px] animate-pulse" style={{ background: "#155B45" }}></span>
+                    <span>Querying municipal database &amp; calculating intervals...</span>
                   </div>
                 )}
               </div>
 
               {/* Terminal Input */}
-              <div className="flex gap-1.5 pt-1 border-t border-slate-200">
+              <div className="flex gap-1.5 pt-2" style={{ borderTop: "1px solid #D9C9AE" }}>
                 <input
                   type="text"
                   value={agentInput}
                   onChange={e => setAgentInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleAgentSubmit()}
                   placeholder="Query project timelines, contractors, clashes..."
-                  className="flex-1 bg-white border border-slate-300 rounded-[3px] px-2.5 py-1.5 text-xs focus:outline-none focus:border-slate-500 font-sans"
+                  className="ws-console-input flex-1 text-xs"
                   disabled={isAgentTyping}
                 />
                 <button
                   onClick={() => handleAgentSubmit()}
                   disabled={isAgentTyping}
-                  className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-[3px] font-mono text-[11px] transition disabled:opacity-50"
+                  className="ws-btn-primary disabled:opacity-50"
                 >
                   Query
                 </button>
@@ -916,16 +898,16 @@ export default function Workspace() {
           {/* TAB 5: NOTICE SCANNER */}
           {activeTab === 'ingest' && (
             <div className="flex-1 p-3.5 space-y-3 overflow-y-auto">
-              <div className="border border-emerald-200 bg-emerald-50/60 rounded-[3px] p-2.5 text-[11px] text-emerald-900">
-                <div className="font-mono text-[10px] uppercase font-bold text-emerald-800 flex items-center gap-1.5 mb-1">
+              <div className="ws-data-block p-3">
+                <div className="ws-alert__title flex items-center gap-1.5 mb-1">
                   <FileText size={13} /> Notice Parsing Pipeline
                 </div>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed text-[11px]">
                   Upload municipal tender PDFs or public works announcements. Structured data extraction processes project schedules, contractor assignments, and addresses.
                 </p>
               </div>
 
-              <div className="border border-dashed border-slate-300 rounded-[3px] p-6 text-center hover:border-slate-400 bg-white transition">
+              <div className="ws-upload-zone p-6 text-center transition">
                 <input
                   type="file"
                   id="pdf-upload"
@@ -935,23 +917,23 @@ export default function Workspace() {
                   className="hidden"
                 />
                 <label htmlFor="pdf-upload" className="cursor-pointer flex flex-col items-center gap-1.5">
-                  <FileText size={28} className="text-slate-400" />
-                  <span className="text-xs font-semibold text-slate-800">
+                  <FileText size={28} className="opacity-50" />
+                  <span className="text-xs font-semibold">
                     {isIngestingPdf ? 'Processing PDF Notice...' : 'Select Municipal Notice (PDF)'}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">PDF up to 5MB</span>
+                  <span className="text-[10px] font-mono opacity-50">PDF up to 5MB</span>
                 </label>
               </div>
 
               {isIngestingPdf && (
-                <div className="p-2.5 bg-blue-50 text-blue-900 text-xs rounded-[3px] border border-blue-200 text-center font-mono">
-                  Extracting text streams & resolving entities...
+                <div className="p-3 bg-[#E6E2D7] text-xs border border-[#D9C9AE] text-center font-mono">
+                  Extracting text streams &amp; resolving entities...
                 </div>
               )}
 
               {ingestSuccess && (
-                <div className="p-2.5 bg-emerald-50 text-emerald-900 text-xs rounded-[3px] border border-emerald-200">
-                  <div className="font-bold font-mono text-[10px] uppercase flex items-center gap-1 text-emerald-800">
+                <div className="p-3 bg-[#E6E2D7] text-xs border border-[#155B45]">
+                  <div className="font-bold font-mono text-[10px] uppercase flex items-center gap-1" style={{ color: "#155B45" }}>
                     <CheckCircle2 size={13} /> Extraction Confirmed
                   </div>
                   <div className="mt-1 text-[11px]">{ingestSuccess}</div>
@@ -982,11 +964,11 @@ export default function Workspace() {
 
         {/* ── RIGHT DRAWER: PROJECT DETAIL INSPECTOR (Hallmark Slide-Over Sheet) ── */}
         {selectedProject && (
-          <aside className="w-full md:w-[360px] lg:w-[380px] flex-none bg-white border-l border-slate-200 flex flex-col overflow-y-auto z-20 absolute md:relative right-0 h-full shadow-lg md:shadow-none">
-            <div className="p-3 border-b border-slate-200 sticky top-0 bg-white/95 backdrop-blur-xs flex justify-between items-center z-10">
+          <aside className="ws-inspector w-full md:w-[360px] lg:w-[380px] flex-none flex flex-col overflow-y-auto z-20 absolute md:relative right-0 h-full shadow-lg md:shadow-none">
+            <div className="ws-inspector-header p-3 sticky top-0 backdrop-blur-xs flex justify-between items-center z-10">
               <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase font-bold text-slate-500">
                 <span>INSPECTOR</span>
-                <span>//</span>
+                <span>{'//'}</span>
                 <span className="text-slate-900">{selectedProject.id}</span>
               </div>
               <button
@@ -1003,17 +985,7 @@ export default function Workspace() {
               {/* Header Badges */}
               <div>
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <span
-                    className={`font-mono text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-[2px] ${
-                      selectedProject.status === 'delayed'
-                        ? 'bg-red-100 text-red-800'
-                        : selectedProject.status === 'ongoing'
-                        ? 'bg-blue-100 text-blue-800'
-                        : selectedProject.status === 'completed'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-amber-100 text-amber-800'
-                    }`}
-                  >
+                  <span className={`ws-status ws-status--${selectedProject.status}`}>
                     {selectedProject.status}
                   </span>
                   <span className="text-[10px] font-mono text-slate-500 uppercase">
@@ -1030,37 +1002,37 @@ export default function Workspace() {
               </div>
 
               {/* Technical Specifications Grid */}
-              <div className="border border-slate-200 rounded-[3px] divide-y divide-slate-100 bg-slate-50/50">
-                <div className="p-2.5">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Department / Contractor</div>
-                  <div className="font-semibold text-slate-900 text-xs mt-0.5">{selectedProject.department || 'Municipal Dept'}</div>
-                  <div className="text-slate-600 text-[11px]">Contractor: {selectedProject.contractor || 'Assigned Vendor'}</div>
+              <div className="ws-data-block mb-4 mt-2">
+                <div className="ws-data-row">
+                  <div className="ws-data-label">Department / Contractor</div>
+                  <div className="ws-data-value font-semibold">{selectedProject.department || 'Municipal Dept'}</div>
+                  <div className="ws-data-value text-[11px]">Contractor: {selectedProject.contractor || 'Assigned Vendor'}</div>
                 </div>
 
-                <div className="p-2.5">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Geospatial Position</div>
-                  <div className="font-semibold text-slate-900 text-xs mt-0.5">{selectedProject.addressText}</div>
-                  <div className="text-slate-500 text-[10px] font-mono mt-0.5">
+                <div className="ws-data-row">
+                  <div className="ws-data-label">Geospatial Position</div>
+                  <div className="ws-data-value font-semibold">{selectedProject.addressText}</div>
+                  <div className="ws-data-value ws-data-value--mono mt-1">
                     {selectedProject.latitude ? `COORDS: ${selectedProject.latitude.toFixed(5)}, ${selectedProject.longitude?.toFixed(5)}` : 'Coordinates unassigned'}
                   </div>
                 </div>
 
-                <div className="p-2.5">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Schedule Window</div>
-                  <div className="text-slate-800 text-[11px] font-mono mt-0.5">
+                <div className="ws-data-row">
+                  <div className="ws-data-label">Schedule Window</div>
+                  <div className="ws-data-value ws-data-value--mono font-semibold">
                     {selectedProject.plannedStartDate || 'TBD'} → {selectedProject.plannedEndDate || 'TBD'}
                   </div>
                   {selectedProject.actualStartDate && (
-                    <div className="text-slate-500 text-[10px] font-mono">
+                    <div className="ws-data-value ws-data-value--mono mt-1 text-slate-500">
                       ACTUAL START: {selectedProject.actualStartDate}
                     </div>
                   )}
                 </div>
 
                 {selectedProject.budget && selectedProject.budget > 0 && (
-                  <div className="p-2.5">
-                    <div className="text-[10px] font-mono text-slate-400 uppercase">Allocated Budget</div>
-                    <div className="text-slate-900 font-mono font-bold text-xs mt-0.5 tabular-nums">
+                  <div className="ws-data-row">
+                    <div className="ws-data-label">Allocated Budget</div>
+                    <div className="ws-data-value ws-data-value--mono font-bold">
                       ${selectedProject.budget.toLocaleString()}
                     </div>
                   </div>
@@ -1069,14 +1041,14 @@ export default function Workspace() {
 
               {/* Schedule / Delay Analysis */}
               {delayFinding && (
-                <div className="p-3 rounded-[3px] border border-amber-300 bg-amber-50/70">
-                  <div className="font-mono text-[10px] uppercase font-bold text-amber-900 flex items-center gap-1 mb-1">
+                <div className="ws-alert ws-alert--delay">
+                  <div className="ws-alert__title flex items-center gap-1">
                     <Clock size={12} /> Schedule Anomaly
                   </div>
-                  <p className="font-semibold text-amber-900 text-xs">
+                  <p className="font-semibold text-xs mt-1">
                     {delayFinding.isOverdue ? `Overdue by ${delayFinding.daysLate} calendar days` : 'Schedule notice recorded'}
                   </p>
-                  <p className="mt-1 text-amber-800 text-[11px] leading-relaxed">
+                  <p className="mt-1 text-[11px] leading-relaxed">
                     {delayFinding.reason}
                   </p>
                 </div>
@@ -1084,13 +1056,13 @@ export default function Workspace() {
 
               {/* Department Conflicts with other projects */}
               {projectConflicts.length > 0 && (
-                <div className="p-3 rounded-[3px] border border-red-300 bg-red-50/70">
-                  <div className="font-mono text-[10px] uppercase font-bold text-red-900 flex items-center gap-1 mb-1.5">
+                <div className="ws-alert ws-alert--clash mt-4">
+                  <div className="ws-alert__title flex items-center gap-1 mb-1.5">
                     <AlertTriangle size={12} /> Active Coordination Clash
                   </div>
                   <div className="space-y-2">
                     {projectConflicts.map(c => (
-                      <div key={c.id} className="text-[11px] text-red-900">
+                      <div key={c.id} className="text-[11px]">
                         <div className="font-mono text-[10px] uppercase font-bold">{c.type.replace('_', ' ')}:</div>
                         <div>{c.reason}</div>
                       </div>
@@ -1111,7 +1083,7 @@ export default function Workspace() {
                   }));
                   setShowReportModal(true);
                 }}
-                className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-[3px] transition text-center text-xs cursor-pointer"
+                className="ws-btn-primary w-full mt-4 block text-center"
               >
                 Log Signal on This Project
               </button>
@@ -1124,9 +1096,9 @@ export default function Workspace() {
 
       {/* MODAL 1: ADD NEW CIVIC PROJECT */}
       {showAddProjectModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[4px] border border-slate-300 shadow-2xl max-w-lg w-full p-5 text-xs text-slate-800 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+        <div className="ws-modal-bg fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="ws-modal max-w-lg w-full p-5 text-xs space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="ws-modal-header flex justify-between items-center pb-2">
               <h3 className="text-xs font-mono uppercase font-bold text-slate-900">
                 Register Infrastructure Project
               </h3>
@@ -1272,17 +1244,17 @@ export default function Workspace() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+              <div className="ws-modal-footer flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowAddProjectModal(false)}
-                  className="px-3 py-1.5 border border-slate-300 rounded-[3px] text-slate-700 hover:bg-slate-50 font-mono text-xs"
+                  className="ws-btn-ghost"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-[3px] text-xs"
+                  className="ws-btn-primary"
                 >
                   Save to Database
                 </button>
@@ -1294,10 +1266,10 @@ export default function Workspace() {
 
       {/* MODAL 2: LOG FIELD SIGNAL */}
       {showReportModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[4px] border border-slate-300 shadow-2xl max-w-md w-full p-5 text-xs text-slate-800 space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-              <h3 className="text-xs font-mono uppercase font-bold text-slate-900">
+        <div className="ws-modal-bg fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="ws-modal max-w-md w-full p-5 text-xs space-y-4">
+            <div className="ws-modal-header flex justify-between items-center pb-2">
+              <h3 className="text-xs font-mono uppercase font-bold" style={{ color: "#191C1A" }}>
                 Log Field Signal / Observation
               </h3>
               <button
@@ -1360,17 +1332,17 @@ export default function Workspace() {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+              <div className="ws-modal-footer flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowReportModal(false)}
-                  className="px-3 py-1.5 border border-slate-300 rounded-[3px] text-slate-700 hover:bg-slate-50 font-mono text-xs"
+                  className="ws-btn-ghost"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-purple-700 hover:bg-purple-800 text-white font-medium rounded-[3px] text-xs"
+                  className="ws-btn-signal"
                 >
                   Register Signal
                 </button>
@@ -1382,10 +1354,10 @@ export default function Workspace() {
 
       {/* MODAL 3: SYSTEM ARCHITECTURE & ABOUT CIVORIUM */}
       {showTeamModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[4px] border border-slate-300 shadow-2xl max-w-md w-full p-5 text-xs text-slate-800 space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-              <h3 className="text-xs font-mono uppercase font-bold text-slate-900">
+        <div className="ws-modal-bg fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="ws-modal max-w-md w-full p-5 text-xs space-y-4">
+            <div className="ws-modal-header flex justify-between items-center pb-2">
+              <h3 className="text-xs font-mono uppercase font-bold" style={{ color: "#191C1A" }}>
                 System Specifications // Civorium
               </h3>
               <button onClick={() => setShowTeamModal(false)} className="text-slate-400 hover:text-slate-700 p-1">
@@ -1411,10 +1383,10 @@ export default function Workspace() {
               </p>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-200">
+            <div className="ws-modal-footer flex justify-end pt-2">
               <button
                 onClick={() => setShowTeamModal(false)}
-                className="px-3 py-1.5 bg-slate-900 text-white rounded-[3px] font-mono text-xs"
+                className="ws-btn-primary"
               >
                 Close
               </button>
@@ -1425,10 +1397,10 @@ export default function Workspace() {
 
       {/* MODAL 4: DATABASE & BACKEND TELEMETRY */}
       {showDbInfoModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-2xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[4px] border border-slate-300 shadow-2xl max-w-lg w-full p-5 text-xs text-slate-800 space-y-4 max-h-[85vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-              <h3 className="text-xs font-mono uppercase font-bold text-slate-900">
+        <div className="ws-modal-bg fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="ws-modal max-w-lg w-full p-5 text-xs space-y-4 max-h-[85vh] overflow-y-auto">
+            <div className="ws-modal-header flex justify-between items-center pb-2">
+              <h3 className="text-xs font-mono uppercase font-bold" style={{ color: "#191C1A" }}>
                 Database Telemetry & Configuration
               </h3>
               <button onClick={() => setShowDbInfoModal(false)} className="text-slate-400 hover:text-slate-700 p-1">
@@ -1462,10 +1434,10 @@ export default function Workspace() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-200">
+            <div className="ws-modal-footer flex justify-end pt-2">
               <button
                 onClick={() => setShowDbInfoModal(false)}
-                className="px-3 py-1.5 bg-slate-900 text-white rounded-[3px] font-mono text-xs"
+                className="ws-btn-primary"
               >
                 Dismiss
               </button>

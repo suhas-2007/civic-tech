@@ -1,173 +1,219 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════
+   CIVORIUM DESIGN TOKENS
+   Palette: warm paper — not a generic SaaS template.
+   Fonts: Barlow Condensed (display) · Barlow (body) · JetBrains Mono (meta)
+═══════════════════════════════════════════════════════════════ */
+
 @theme inline {
-  /* ── Workspace (Newsprint) theme tokens ── */
-  --color-paper: var(--color-paper-1);
-  --color-paper-2: var(--color-paper-2);
-  --color-paper-3: var(--color-paper-3);
-  --color-ink: var(--color-ink-1);
-  --color-ink-2: var(--color-ink-2);
-  --color-ink-3: var(--color-ink-3);
-  --color-accent: var(--color-accent-1);
-  --color-accent-2: var(--color-accent-2);
-  
-  /* ── Font tokens ── */
-  --font-display: var(--font-dm-serif), "Georgia", serif;
-  --font-editorial: var(--font-newsreader), serif;
-  --font-body: var(--font-newsreader), serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  /* ── Font stack tokens ── */
+  --font-display:  var(--font-display), "Arial Narrow", sans-serif;
+  --font-body:     var(--font-body), system-ui, sans-serif;
+  --font-mono:     var(--font-mono), "Courier New", monospace;
 
-  /* ── Landing (Studio) theme tokens ── */
-  --color-land-bg: var(--color-land-bg-val);
-  --color-land-ink: var(--color-land-ink-val);
-  --color-land-ink-2: var(--color-land-ink-2-val);
-  --color-land-ink-3: var(--color-land-ink-3-val);
-  --color-land-accent: var(--color-land-accent-val);
-  --color-land-accent-2: var(--color-land-accent-2-val);
-  --color-land-surface: var(--color-land-surface-val);
-  --color-land-rule: var(--color-land-rule-val);
+  /* ── Color tokens — warm paper palette ── */
+  --color-paper:         #F2F0E8;   /* base background */
+  --color-paper-2:       #E6E2D7;   /* surface / raised panel */
+  --color-paper-3:       #D9C9AE;   /* warm mineral / divider */
+  --color-ink:           #191C1A;   /* primary text */
+  --color-ink-2:         #3D4240;   /* secondary text */
+  --color-ink-3:         #6B706E;   /* tertiary / muted */
+  --color-green:         #155B45;   /* infrastructure green / primary accent */
+  --color-green-dark:    #0E3E30;   /* deep green for hover */
+  --color-terracotta:    #C85B43;   /* terracotta / alert accent */
+  --color-terracotta-dark: #A54836; /* deep terracotta */
 
-  /* ── Spacing ── */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2.5rem;
-  --space-2xl: 4rem;
-  --space-3xl: 6rem;
-  --space-4xl: 9rem;
+  /* ── Status semantics ── */
+  --color-status-ongoing:   #155B45;
+  --color-status-delayed:   #C85B43;
+  --color-status-planned:   #4A6E8A;
+  --color-status-completed: #3D4240;
+  --color-status-paused:    #7A6848;
 
   /* ── Type scale ── */
-  --text-display: clamp(3rem, 8vw, 6.5rem);
-  --text-display-s: clamp(2rem, 5vw, 3.75rem);
-  --text-4xl: clamp(1.75rem, 4vw, 2.5rem);
-  --text-3xl: clamp(1.375rem, 3vw, 1.875rem);
-  --text-xl: 1.25rem;
-  --text-base: 1rem;
-  --text-sm: 0.875rem;
-  --text-xs: 0.75rem;
+  --text-display:   clamp(3.5rem, 9vw, 7.5rem);
+  --text-display-s: clamp(2.25rem, 5.5vw, 4rem);
+  --text-4xl:       clamp(1.75rem, 3.5vw, 2.5rem);
+  --text-3xl:       clamp(1.375rem, 2.5vw, 1.875rem);
+  --text-xl:        1.25rem;
+  --text-lg:        1.125rem;
+  --text-base:      1rem;
+  --text-sm:        0.875rem;
+  --text-xs:        0.75rem;
+  --text-2xs:       0.6875rem;
+
+  /* ── Spacing scale (4-pt base) ── */
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+  --space-20:  5rem;
+  --space-24:  6rem;
+  --space-32:  8rem;
 
   /* ── Easing ── */
-  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
-  --dur-fast: 120ms;
-  --dur-base: 200ms;
-  --dur-slow: 350ms;
+  --dur-fast:    100ms;
+  --dur-base:    180ms;
+  --dur-slow:    320ms;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   BASE STYLES
+───────────────────────────────────────────────────────────── */
 :root {
-  /* ── Workspace (Newsprint) palette ── */
-  --color-paper-1: oklch(96% 0.008 90);
-  --color-paper-2: oklch(93% 0.008 90);
-  --color-paper-3: oklch(90% 0.008 90);
-  --color-ink-1: oklch(22% 0.01 250);
-  --color-ink-2: oklch(42% 0.01 250);
-  --color-ink-3: oklch(62% 0.01 250);
-  --color-accent-1: oklch(42% 0.14 30);
-  --color-accent-2: oklch(52% 0.14 30);
-
-  /* Status semantics (workspace) */
-  --color-status-ongoing: oklch(52% 0.13 140);
-  --color-status-delayed: oklch(57% 0.15 30);
-  --color-status-planned: oklch(55% 0.12 250);
-  --color-status-completed: oklch(38% 0.02 250);
-  --color-status-paused: oklch(58% 0.12 80);
-
-  /* ── Landing (Studio) palette ── */
-  /* Studio: near-white canvas, charcoal ink, forest-green accent */
-  --color-land-bg-val: oklch(98% 0.005 120);
-  --color-land-ink-val: oklch(18% 0.01 250);
-  --color-land-ink-2-val: oklch(38% 0.01 250);
-  --color-land-ink-3-val: oklch(60% 0.01 250);
-  --color-land-accent-val: oklch(48% 0.14 150);       /* forest green */
-  --color-land-accent-2-val: oklch(40% 0.16 150);     /* deeper forest */
-  --color-land-surface-val: oklch(94% 0.006 120);     /* light sage tint */
-  --color-land-rule-val: oklch(82% 0.01 120);         /* hairline */
+  color-scheme: light;
 }
 
-/* ── Base styles (workspace) ── */
-body {
-  font-family: var(--font-sans);
-  background-color: #f8fafc;
-  color: #0f172a;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
   overflow-x: clip;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-style: normal;
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-
-/* ── Landing page base override ── */
-.landing-root {
-  background-color: var(--color-land-bg);
-  color: var(--color-land-ink);
-  font-family: var(--font-sans);
-}
-
-.landing-root h1,
-.landing-root h2,
-.landing-root h3 {
   font-family: var(--font-display);
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
   overflow-wrap: anywhere;
   min-width: 0;
 }
 
-/* ── Operational Workbench Utilities ── */
+/* ─────────────────────────────────────────────────────────────
+   WORKSPACE BASE (data-dense screens — override palette only)
+───────────────────────────────────────────────────────────── */
+.workspace-root {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* Leaflet map stays neutral */
+.leaflet-container {
+  font-family: var(--font-body) !important;
+  background: #e8e5d8 !important;
+}
+.leaflet-popup-content-wrapper {
+  background: var(--color-paper) !important;
+  color: var(--color-ink) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 4px 16px -2px rgba(25, 28, 26, 0.15), 0 1px 3px rgba(25, 28, 26, 0.08) !important;
+  border: 1px solid var(--color-paper-3) !important;
+}
+.leaflet-popup-tip {
+  background: var(--color-paper) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────────────────────── */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
+.hairline {
+  border: none;
+  border-top: 1px solid var(--color-paper-3);
+  margin: 0;
+}
+
 .hairline-b {
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-paper-3);
 }
 
 .hairline-r {
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--color-paper-3);
 }
 
-/* ── Leaflet overrides (workspace) ── */
-.leaflet-container {
-  font-family: var(--font-sans);
-  background: #f1f5f9 !important;
-}
-.leaflet-popup-content-wrapper {
-  background: #ffffff !important;
-  color: #0f172a !important;
-  border-radius: 6px !important;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(15, 23, 42, 0.08) !important;
-  border: 1px solid #cbd5e1;
-}
-.leaflet-popup-tip {
-  background: #ffffff !important;
-}
-
-/* ── Form elements ── */
-input, select, textarea {
-  font-family: var(--font-sans);
+/* ─────────────────────────────────────────────────────────────
+   SHARED COMPONENT: status badges
+───────────────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
 }
 
-/* ── Focus ring ── */
+.status-badge--ongoing    { color: var(--color-status-ongoing);   border-color: color-mix(in srgb, var(--color-status-ongoing)  60%, transparent); background: color-mix(in srgb, var(--color-status-ongoing)  8%, transparent); }
+.status-badge--delayed    { color: var(--color-status-delayed);   border-color: color-mix(in srgb, var(--color-status-delayed)  60%, transparent); background: color-mix(in srgb, var(--color-status-delayed)  8%, transparent); }
+.status-badge--planned    { color: var(--color-status-planned);   border-color: color-mix(in srgb, var(--color-status-planned)  60%, transparent); background: color-mix(in srgb, var(--color-status-planned)  8%, transparent); }
+.status-badge--completed  { color: var(--color-status-completed); border-color: color-mix(in srgb, var(--color-status-completed) 60%, transparent); background: color-mix(in srgb, var(--color-status-completed) 8%, transparent); }
+.status-badge--paused     { color: var(--color-status-paused);    border-color: color-mix(in srgb, var(--color-status-paused)   60%, transparent); background: color-mix(in srgb, var(--color-status-paused)   8%, transparent); }
+
+/* ─────────────────────────────────────────────────────────────
+   SHARED COMPONENT: data-origin badge
+───────────────────────────────────────────────────────────── */
+.origin-badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+  border: 1px solid var(--color-paper-3);
+  padding: 0.15rem 0.45rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SHARED: focus rings
+───────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--color-green);
   outline-offset: 2px;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f8fafc; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+/* ─────────────────────────────────────────────────────────────
+   SHARED: form elements
+───────────────────────────────────────────────────────────── */
+input, select, textarea {
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 1px solid var(--color-paper-3);
+}
 
-/* ── Reduced motion ── */
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--color-green);
+  outline-offset: 0;
+  border-color: var(--color-green);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   REDUCED MOTION
+───────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
 }
-

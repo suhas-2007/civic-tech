@@ -1,27 +1,38 @@
 import type { Metadata } from "next";
-import { Newsreader, Inter, DM_Serif_Display } from "next/font/google";
+import {
+  Barlow_Condensed,
+  Barlow,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
 
-const dmSerifDisplay = DM_Serif_Display({
-  variable: "--font-dm-serif",
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal"],
+  display: "swap",
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const barlow = Barlow({
+  variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal"],
+  display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Civorium | Public Works Intelligence",
-  description: "Civorium public infrastructure intelligence platform for transparency and coordination in municipal projects.",
+  title: "Civorium — Public Works Intelligence",
+  description:
+    "Civorium connects public project records, detects cross-department coordination failures, and traces accountability timelines.",
 };
 
 export default function RootLayout({
@@ -30,7 +41,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSerifDisplay.variable} ${newsreader.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${barlowCondensed.variable} ${barlow.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="antialiased overflow-x-clip min-h-screen">
         {children}
       </body>
