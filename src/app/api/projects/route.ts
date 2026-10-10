@@ -4,8 +4,10 @@ import { getProjects, createProject } from '@/lib/db';
 // get all projects
 export async function GET(_req: Request) {
   try {
+    const { isSupabaseConfigured } = await import('@/lib/supabase');
     const data = await getProjects();
-    return NextResponse.json(data);
+    const hasEnv = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL);
+    return NextResponse.json({ ...data, hasEnv, isConfigured: isSupabaseConfigured });
   } catch (err: any) {
     console.error('Failed to get projects:', err);
     return NextResponse.json(

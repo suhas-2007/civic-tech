@@ -51,6 +51,7 @@ export default function Workspace() {
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [showDbInfoModal, setShowDbInfoModal] = useState(false);
   const [pinnedCoords, setPinnedCoords] = useState<[number, number] | null>(null);
+  const [dbDebugInfo, setDbDebugInfo] = useState<{ source?: string; error?: string; hasEnv?: boolean; isConfigured?: boolean } | null>(null);
 
   // form inputs state
   const [newProjectForm, setNewProjectForm] = useState({
@@ -103,6 +104,12 @@ export default function Workspace() {
       if (projRes.projects) {
         setProjects(projRes.projects);
         setDataSource(projRes.source);
+        setDbDebugInfo({
+          source: projRes.source,
+          error: projRes.error,
+          hasEnv: projRes.hasEnv,
+          isConfigured: projRes.isConfigured,
+        });
       }
       if (repRes.reports) {
         setCitizenReports(repRes.reports);
@@ -1293,6 +1300,16 @@ export default function Workspace() {
             <div className="space-y-3">
               <div className={`p-3 rounded-lg border ${dataSource === 'supabase' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
                 <strong>Status:</strong> {dataSource === 'supabase' ? '🟢 Live Supabase Database Connected!' : '⚡ Demo In-Memory DB Mode Active'}
+                {dbDebugInfo?.error && (
+                  <div className="mt-2 text-red-700 bg-red-50 p-2 rounded border border-red-200 text-[11px] font-mono">
+                    Supabase Error: {dbDebugInfo.error}
+                  </div>
+                )}
+                {dbDebugInfo?.hasEnv === false && (
+                  <div className="mt-2 text-amber-800 bg-amber-100/60 p-2 rounded text-[11px]">
+                    ⚠️ Vercel has not injected NEXT_PUBLIC_SUPABASE_URL into this deployment. Ensure the variable is added under Environment Variables and a fresh deployment is triggered.
+                  </div>
+                )}
               </div>
 
               <p>

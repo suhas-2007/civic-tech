@@ -71,7 +71,7 @@ function mapRowToReport(row: any): CitizenReport {
 }
 
 // fetch all projects
-export async function getProjects(): Promise<{ projects: Project[]; source: 'supabase' | 'fallback' }> {
+export async function getProjects(): Promise<{ projects: Project[]; source: 'supabase' | 'fallback'; error?: string }> {
   if (isSupabaseConfigured) {
     try {
       const { data, error } = await supabase
@@ -81,7 +81,7 @@ export async function getProjects(): Promise<{ projects: Project[]; source: 'sup
 
       if (error) {
         console.warn('Supabase query failed, using local cache:', error.message);
-        return { projects: localProjectsState, source: 'fallback' };
+        return { projects: localProjectsState, source: 'fallback', error: error.message };
       }
 
       if (!error && data) {
@@ -92,6 +92,7 @@ export async function getProjects(): Promise<{ projects: Project[]; source: 'sup
       }
     } catch (err: any) {
       console.warn('Supabase connection error:', err.message);
+      return { projects: localProjectsState, source: 'fallback', error: err.message };
     }
   }
 
